@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -68,6 +69,17 @@ public class Main {
 
         banque.virer("1","2",10000);
         compteAl.afficherSolde();
+
+        System.out.println("Ajout nouveau compte Alice");
+
+        banque.ajouterCompte(new CompteCourant("Alice",200,300));
+
+
+        List<CompteBancaire> comptesAlice = banque.rechercherComptesParNom("alice");
+
+        System.out.println("Afficher les comptes Alice");
+
+        banque.afficherComptesSelonListe(comptesAlice);
 
 
     }

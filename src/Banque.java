@@ -15,11 +15,11 @@ public class Banque {
 
     public void ajouterCompte(CompteBancaire c){
         listeMapComptes.put(c.getNumeroCompte(),c);
-        List<CompteBancaire> lc = comptesParNom.get(c.getTitulaire());
+        List<CompteBancaire> lc = comptesParNom.get(c.getTitulaire().toLowerCase());
         if(lc == null){
             lc =new ArrayList<>();
             lc.add(c);
-            comptesParNom.put(c.getTitulaire(),lc);
+            comptesParNom.put(c.getTitulaire().toLowerCase(),lc);
        }else{
             lc.add(c);
        }
@@ -27,29 +27,40 @@ public class Banque {
     }
 
     public void afficherTout(){
-        listeMapComptes.forEach((s, compteBancaire) -> compteBancaire.afficherSolde() );
+        listeMapComptes.forEach((s, compteBancaire) -> compteBancaire.afficherSolde());
     }
 
-    public CompteBancaire rechercherCompte(String numeroCompte) throws NumeroCompteInexistant {
+    public void afficherComptesSelonListe(List<CompteBancaire> lc){
+        for(CompteBancaire c : lc){
+            c.afficherSolde();
+        }
+    }
+    public CompteBancaire rechercherCompte(String numeroCompte) throws CompteInexistant {
         if (listeMapComptes.get(numeroCompte) == null){
-            throw new NumeroCompteInexistant("Le numero de compte n'existe pas");
+            throw new CompteInexistant("Le numero de compte n'existe pas");
         }
         return listeMapComptes.get(numeroCompte);
     }
 
-    public void virer(String nomDebiteur, String nomCredite, double montant){
-        CompteBancaire debite =rechercherCompte(nomDebiteur);
-        CompteBancaire credite = rechercherCompte(nomCredite);
-        if(debite != null  && credite != null){
+    public List<CompteBancaire> rechercherComptesParNom(String nomTitulaire) throws CompteInexistant {
+        List<CompteBancaire> lc = comptesParNom.get(nomTitulaire.toLowerCase());
+        if(lc == null) {
+            throw new CompteInexistant("Aucun compte n'est associe a ce nom");
+        }
+            return lc;
+    }
+
+
+
+    public void virer(String numeroDebiteur, String numeroCredite, double montant){
+        CompteBancaire debite =rechercherCompte(numeroDebiteur);
+        CompteBancaire credite = rechercherCompte(numeroCredite);
+
             if (debite instanceof CompteCourant){
                 ((CompteCourant) debite).effectuerVirement(credite, montant);
             }else{
                 System.err.println("Le compte "+ debite.getTitulaire() +" ne peut realiser de virement");
             }
-        }else{
-            System.err.println("L'un des deux comptes ou les deux sont null");
-
-        }
 
     }
 }
