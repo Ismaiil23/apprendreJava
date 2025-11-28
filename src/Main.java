@@ -1,3 +1,4 @@
+import java.util.Locale;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -7,6 +8,7 @@ public class Main {
 
         var console = System.in;
         Scanner scannerConsole= new Scanner(console);
+        scannerConsole.useLocale(Locale.US);
 
         Banque banque = new Banque();
 
@@ -27,8 +29,8 @@ public class Main {
                     break;
 
                 case 3 :
+                    faireVirement(scannerConsole,banque);
                     break;
-
 
                 case 4 :
                     enFonction=false;
@@ -66,33 +68,45 @@ public class Main {
         clear();
         System.out.println("1. Compte courant taper/ 2. Compte epargne");
         System.out.println("Votre choix : ");
-        int i1 = scannerConsole.nextInt();
         scannerConsole.nextLine();
         clear();
-        if(i1==1){
+        int i1 =0;
+        while(i1 !=1 && i1!=2){
+            i1 = scannerConsole.nextInt();
+
+            if(i1==1){
+
             System.out.println("Votre decouvert autorise sera de :\n1. 200/ 2. 400");
             int decouvert = scannerConsole.nextInt();
+            while (decouvert !=1 && decouvert!=2){
+                scannerConsole.nextLine();
+                System.out.println("Chiffre non valide");
+                decouvert=scannerConsole.nextInt();
+            }
+            scannerConsole.nextLine();
             if(decouvert==1){
                 decouvert=200;
             } else if (decouvert==2) {
                 decouvert=400;
-            }else {
-                System.out.println("Chiffre non valide");
             }
-            scannerConsole.nextLine();
             banque.ajouterCompte(new CompteCourant(titu,solde,decouvert));
             afficherlesComptes(banque, titu);
 
         } else if (i1==2) {
             System.out.println("Taux d'interet (ex: 0.05): ");
             double taux = scannerConsole.nextDouble();
+            while(taux<0.0 || taux>1.0){
+                scannerConsole.nextLine();
+                System.out.println("Chiffre non valide");
+                taux = scannerConsole.nextDouble();
+            }
             scannerConsole.nextLine();
             banque.ajouterCompte(new CompteEpargne(titu,solde,taux));
             afficherlesComptes(banque, titu);
-
         }else{
-            System.out.println("Chiffre non valide");
-        }
+            System.err.println("Chiffre non valide");
+        }}
+
         System.out.println("Compte cree !");
 
     }
@@ -138,6 +152,20 @@ public class Main {
     }
 
 
+    private static void faireVirement(Scanner scannerConsole,Banque banque){
+        System.out.println("A quel compte souhaitez vous faire le virement ? [numero de compte]");
+        var numeroCompteCredite= scannerConsole.nextLine();
+        System.out.println("Depuis quel compte souhaitez vous faire le virement ? [numero de compte]");
+        var numeroCompteDebite= scannerConsole.nextLine();
+        System.out.println("Quel est le montant que vous souhaitez virer");
+        var montant = scannerConsole.nextDouble();
+        scannerConsole.nextLine();
+        try {
+            banque.virer(numeroCompteDebite,numeroCompteCredite,montant);
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
 
 
     }
