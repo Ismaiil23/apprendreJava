@@ -1,8 +1,3 @@
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -27,15 +22,15 @@ public class Main {
                     creationCompte(scannerConsole,banque);
                     break;
                 case 2 :
+                    afficherCompte(scannerConsole,banque);
+
                     break;
 
                 case 3 :
                     break;
 
-                case 4 :
-                    break;
 
-                case 5 :
+                case 4 :
                     enFonction=false;
                     break;
 
@@ -49,10 +44,9 @@ public class Main {
     private static void afficherMenu(){
         System.out.println("\n=== MENU BANQUE ===");
         System.out.println("1. Créer un compte");
-        System.out.println("2. Afficher un compte (par numéro)");
+        System.out.println("2. Afficher un compte ou des comptes");
         System.out.println("3. Créer un virement");
-        System.out.println("4. Rechercher des comptes par nom");
-        System.out.println("5. Quitter");
+        System.out.println("4. Quitter");
         System.out.print("Votre choix : ");
     }
     public static void clear() {
@@ -83,30 +77,67 @@ public class Main {
             } else if (decouvert==2) {
                 decouvert=400;
             }else {
-                throw new RuntimeException("Chiffre non valide");
+                System.out.println("Chiffre non valide");
             }
             scannerConsole.nextLine();
             banque.ajouterCompte(new CompteCourant(titu,solde,decouvert));
-            afficherUnCompte(banque, titu);
+            afficherlesComptes(banque, titu);
 
         } else if (i1==2) {
             System.out.println("Taux d'interet (ex: 0.05): ");
             double taux = scannerConsole.nextDouble();
             scannerConsole.nextLine();
             banque.ajouterCompte(new CompteEpargne(titu,solde,taux));
-            afficherUnCompte(banque, titu);
+            afficherlesComptes(banque, titu);
 
         }else{
-            throw new RuntimeException("Chiffre non valide");
+            System.out.println("Chiffre non valide");
         }
         System.out.println("Compte cree !");
 
     }
 
-    private static void afficherUnCompte(Banque banque, String titu) {
-        System.out.println("Voici le recap de vos comptes :");
-        var compte = banque.rechercherComptesParNom(titu);
-        banque.afficherComptesSelonListe(compte);
+    private static void afficherCompte(Scanner scannerConsole, Banque banque){
+        System.out.println("1. J'ai mon numero de compte / 2. Je n'ai pas mon numero de compte");
+        int i = scannerConsole.nextInt();
+        scannerConsole.nextLine();
+        if(i==1){
+            System.out.println("Entrez votre numero de compte :");
+            var numCompte = scannerConsole.nextLine();
+            try{
+            afficherUnCompte(banque,numCompte);
+            }catch (CompteInexistant e){
+                System.err.println(e.getMessage());
+            }
+
+        } else if (i==2) {
+            System.out.println("Entrez votre nom :");
+            var nomCompte = scannerConsole.nextLine();
+            try{
+                afficherlesComptes(banque,nomCompte);
+            }catch(CompteInexistant e){
+                System.err.println(e.getMessage());
+            }
+
+
+        }else{
+            System.out.println("Chiffre non valide");
+        }
+
     }
 
-}
+    private static void afficherlesComptes(Banque banque, String titu) {
+        System.out.println("Voici le recap de vos comptes :");
+        var comptes = banque.rechercherComptesParNom(titu);
+        banque.afficherComptesSelonListe(comptes);
+    }
+    private static void afficherUnCompte(Banque banque, String numeroCompte) {
+        System.out.println("Voici le detail de votre compte: ");
+        var compte = banque.rechercherCompte(numeroCompte);
+        compte.afficherSolde();
+    }
+
+
+
+
+    }
