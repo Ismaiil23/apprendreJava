@@ -1,6 +1,6 @@
 public class CompteCourant extends CompteBancaire implements Transferable{
-    private double decouvertAutorise;
-    public CompteCourant(String titulaire, double solde, double decouvertAutorise){
+    private int decouvertAutorise;
+    public CompteCourant(String titulaire, double solde, int decouvertAutorise){
         super(titulaire,solde);
         this.decouvertAutorise=decouvertAutorise;
     }
@@ -35,7 +35,7 @@ public class CompteCourant extends CompteBancaire implements Transferable{
 
     }
 
-    public double getDecouvert() {
+    public int getDecouvert() {
         return decouvertAutorise;
     }
 }

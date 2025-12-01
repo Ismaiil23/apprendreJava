@@ -12,6 +12,11 @@ public class Main {
         scannerConsole.useLocale(Locale.US);
 
         Banque banque = new Banque();
+        try {
+            banque.charger("save.csv");
+        } catch (Exception e) {
+            System.out.println("Aucune sauvegarde trouvée (ou erreur), démarrage avec une banque vide.");
+        }
 
         var enFonction= true;
 
