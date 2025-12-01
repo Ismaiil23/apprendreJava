@@ -26,7 +26,6 @@ public class Main {
                     break;
                 case 2 :
                     afficherCompte(scannerConsole,banque);
-
                     break;
 
                 case 3 :
@@ -68,46 +67,66 @@ public class Main {
         double solde = scannerConsole.nextDouble();
         scannerConsole.nextLine();
         clear();
-        System.out.println("1. Compte courant taper/ 2. Compte epargne");
-        System.out.println("Votre choix : ");
-        scannerConsole.nextLine();
-        clear();
-        int i1 =0;
-        while(i1 !=1 && i1!=2){
-            i1 = scannerConsole.nextInt();
-
-            if(i1==1){
-
-            System.out.println("Votre decouvert autorise sera de :\n1. 200/ 2. 400");
-            int decouvert = scannerConsole.nextInt();
-            while (decouvert !=1 && decouvert!=2){
+        System.out.println("1. Compte courant / 2. Compte epargne");
+        System.out.print("Votre choix : ");
+        int choix =0;
+        while(choix !=1 && choix!=2) {
+            if (scannerConsole.hasNextInt()) {
+                choix = scannerConsole.nextInt();
                 scannerConsole.nextLine();
-                System.out.println("Chiffre non valide");
-                decouvert=scannerConsole.nextInt();
+                if (choix != 1 && choix != 2) {
+                    System.err.println("Choix invalide");
+                }
+            } else {
+                System.err.println("On veut un entier en entree");
+                scannerConsole.next();
             }
-            scannerConsole.nextLine();
-            if(decouvert==1){
-                decouvert=200;
-            } else if (decouvert==2) {
-                decouvert=400;
-            }
-            banque.ajouterCompte(new CompteCourant(titu,solde,decouvert));
-            afficherlesComptes(banque, titu);
+        }
 
-        } else if (i1==2) {
+            if(choix==1){
+
+                System.out.println("Votre decouvert autorise sera de :\n1. 200/ 2. 400");
+                int decouvert = 0;
+                while (decouvert !=1 && decouvert!=2){
+                    if(scannerConsole.hasNextInt()){
+                        decouvert = scannerConsole.nextInt();
+                        scannerConsole.nextLine();
+                        if(decouvert !=1 && decouvert!=2){
+                            System.err.println("On veut un entier 1 ou 2");
+                        }
+                    }else{
+                        System.err.println("Chiffre non valide");
+                        scannerConsole.next();
+                    }
+                }
+                if(decouvert==1){
+                    decouvert=200;
+                } else if (decouvert==2) {
+                    decouvert=400;
+                }
+                banque.ajouterCompte(new CompteCourant(titu,solde,decouvert));
+                afficherlesComptes(banque, titu);
+
+        } else if (choix==2) {
             System.out.println("Taux d'interet (ex: 0.05): ");
-            double taux = scannerConsole.nextDouble();
+            double taux =-1;
             while(taux<0.0 || taux>1.0){
-                scannerConsole.nextLine();
-                System.out.println("Chiffre non valide");
-                taux = scannerConsole.nextDouble();
+                if(scannerConsole.hasNextDouble()){
+                    taux = scannerConsole.nextDouble();
+                    scannerConsole.nextLine();
+                    if(taux<0.0 || taux>1.0){
+                        System.err.println("Le taux doit être entre 0.0 et 1.0 !");
+                    }
+                }else{
+                    System.out.println("Chiffre non valide");
+                    scannerConsole.next();
+                }
             }
-            scannerConsole.nextLine();
             banque.ajouterCompte(new CompteEpargne(titu,solde,taux));
             afficherlesComptes(banque, titu);
         }else{
             System.err.println("Chiffre non valide");
-        }}
+        }
 
         System.out.println("Compte cree !");
 
