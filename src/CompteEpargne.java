@@ -14,4 +14,7 @@ public class CompteEpargne extends CompteBancaire{
         System.out.println("Livret Epargne de " + getTitulaire() + " : " + getSolde() + " euros");
     }
 
+    public double getTaux() {
+        return tauxInteret;
+    }
 }

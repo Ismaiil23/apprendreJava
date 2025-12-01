@@ -1,10 +1,11 @@
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         var console = System.in;
         Scanner scannerConsole= new Scanner(console);
@@ -33,6 +34,7 @@ public class Main {
                     break;
 
                 case 4 :
+                    banque.sauvegarder("save.csv");
                     enFonction=false;
                     break;
 

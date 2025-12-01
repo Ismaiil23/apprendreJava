@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class Banque {
 
@@ -62,5 +65,30 @@ public class Banque {
                 System.err.println("Le compte "+ debite.getTitulaire() +" ne peut realiser de virement");
             }
 
+    }
+
+    public void sauvegarder(String nomFichier) {
+        try(BufferedWriter writer =new BufferedWriter(new FileWriter(nomFichier))){
+            for(CompteBancaire compte : listeMapComptes.values()){
+                String type ="";
+                String infoSup="";
+
+                if(compte instanceof CompteCourant){
+                    type="COURANT";
+                    infoSup = String.valueOf(((CompteCourant) compte).getDecouvert());
+                }else if(compte instanceof CompteEpargne){
+                    type="EPARGNE";
+                    infoSup= String.valueOf(((CompteEpargne) compte).getTaux());
+                }
+
+                String ligne = type + ";"+ compte.getNumeroCompte() + ";"+ compte.getTitulaire() + ";"+ compte.getSolde() + ";"+ infoSup;
+
+                writer.write(ligne);
+                writer.newLine();
+            }
+            System.out.println("Sauvegarde done !");
+        }catch(IOException e){
+            System.err.println("Erreur de sauvegarde : "+ e.getMessage());
+        }
     }
 }
