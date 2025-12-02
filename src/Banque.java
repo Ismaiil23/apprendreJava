@@ -93,11 +93,20 @@ public class Banque {
     public void charger(String nomFichier){
         try(BufferedReader reader = new BufferedReader(new FileReader(nomFichier))) {
             String ligne;
+            int maxId=0;
             while ((ligne = reader.readLine())!=null){
                 CompteBancaire compte = getCompteBancaire(ligne);
 
+                int idActuel =Integer.parseInt(compte.getNumeroCompte());
+                if ( idActuel> maxId ){
+                    maxId = idActuel;
+
+                }
+
                 this.ajouterCompte(compte);
+
             }
+            CompteBancaire.setNombreDeComptes(maxId+1);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -108,9 +117,12 @@ public class Banque {
         String[] morceaux = ligne.split(";");
         var type = morceaux[0];
         var numCompte = morceaux[1];
+
         var titu = morceaux[2];
         var solde= Double.parseDouble(morceaux[3]);
         var infoSup= morceaux[4];
+
+
 
         CompteBancaire compte = null;
         if (type.equals("COURANT")){
@@ -120,6 +132,7 @@ public class Banque {
             compte = new CompteEpargne(titu,solde, Double.parseDouble(infoSup));
             compte.setNumeroCompte(numCompte);
         }
+
         return compte;
     }
 

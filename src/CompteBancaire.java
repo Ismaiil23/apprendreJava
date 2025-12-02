@@ -46,4 +46,7 @@ public abstract class CompteBancaire {
     public void setNumeroCompte(String numeroCompte) {
         this.numeroCompte = numeroCompte;
     }
+    public static void setNombreDeComptes(int nombreDeComptes) {
+        CompteBancaire.nombreDeComptes = nombreDeComptes;
+    }
 }
